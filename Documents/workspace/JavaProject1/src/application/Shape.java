@@ -23,8 +23,6 @@ public class Shape extends AnchorPane{
 	 * The number of sides the shape has
 	 */
 	private final int num_sides;
-	private double originalWidth = -1;
-	private double originalHeight = -1;
 	
 	/**
 	 * Constructs a shape of n-sides
@@ -44,15 +42,9 @@ public class Shape extends AnchorPane{
 			public void changed( ObservableValue<? extends Number> observable,
 					Number oldValue, Number newValue)
 			{
-				if(originalHeight == -1)
-					originalHeight = newValue.doubleValue(); 
 				for(Node current: getChildren())
-				{
-					current.setScaleY(newValue.doubleValue() / originalHeight);
-					current.setTranslateY(newValue.doubleValue() / 2);
-				}
-
-				System.out.println("Height Changed + " + newValue.doubleValue() / oldValue.doubleValue());
+					if(oldValue.doubleValue() != 0)
+						current.setScaleY(current.getScaleY() * newValue.doubleValue() / oldValue.doubleValue());
 			}
 		});
 		
@@ -61,15 +53,12 @@ public class Shape extends AnchorPane{
 			public void changed(ObservableValue<? extends Number> observable,
 					Number oldValue, Number newValue)
 			{
-				if(originalWidth == -1)
-					originalWidth = newValue.doubleValue(); 
+				
 				for(Node current: getChildren())
 				{
-					current.setScaleX(newValue.doubleValue() / originalWidth);
-					current.setTranslateX(newValue.doubleValue() / 2  );
+					if(oldValue.doubleValue() != 0)
+						current.setScaleX(current.getScaleX() * newValue.doubleValue() / (oldValue.doubleValue()));
 				}
-				
-				System.out.println("Width Changed " + newValue.doubleValue() / oldValue.doubleValue());
 			}
 		});
 		
