@@ -1,6 +1,7 @@
 package application;
 
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 /**
  * This object is a n-sided shape with a javafx color also.
@@ -23,6 +24,10 @@ public class ColoredShape extends Shape{
 	public ColoredShape(int num_sides, Color color) {
 		super(num_sides);
 		this.color = color;
+		polygon.getStyleClass().setAll("coloredPolygon");
+		polygon.setFill(color);
+		getChildren().clear();
+		getChildren().setAll(polygon, text);
 	}
 	
 	/**

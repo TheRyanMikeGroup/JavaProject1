@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
@@ -27,8 +28,10 @@ public class Shape extends AnchorPane{
 	private final int num_sides;
 	private Scale scale;
 	private Translate translate;
+	protected Polygon polygon;
+	protected Text text;
 	
-	private static final double INITIAL_DIMENSION = 30.0;
+	private static final double INITIAL_DIMENSION = 100.0;
 	
 	/**
 	 * Constructs a shape of n-sides
@@ -54,19 +57,40 @@ public class Shape extends AnchorPane{
 		//Sets the window size to the initial size
 		super.setHeight(INITIAL_DIMENSION);
 		super.setWidth(INITIAL_DIMENSION);
-
+		
+		//Adds the application style sheet
+		getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+		
 		//Initializes the polygon
-		Polygon polygon = new Polygon();
-
+		polygon = new Polygon();
+		
+		//Sets the style of the polygon
+		polygon.getStyleClass().add("defaultNoncoloredPolygon");
+		
+		
 		//Generates the regular polygon
 		for(int i = 0; i < num_sides; i++)
 		{
-			polygon.getPoints().add((1 + Math.sin((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0);
-			polygon.getPoints().add((1 - Math.cos((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0);
+			polygon.getPoints().add((1 + .9*Math.sin((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0 );
+			polygon.getPoints().add((1 - .9*Math.cos((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0 );
 		}
 		
 		//Adds the Regular Polygon to the pane
 		super.getChildren().add(polygon);
+				
+		//Creates the label
+		text = new Text("" + num_sides);
+		
+		//Centers the number in the polygon
+		text.setY(INITIAL_DIMENSION / 2 + text.getBoundsInLocal().getHeight() / 4);
+		text.setX(INITIAL_DIMENSION / 2 - text.getBoundsInLocal().getWidth() / 2.0);
+		
+		//Sets the style of text
+		text.getStyleClass().add("defaultNoncoloredPolygon");
+		
+		super.getChildren().add(text);
+		
+		
 		
 		//Add a listener so that if the pane changes its height then the graphics will change 
 		super.heightProperty().addListener(new ChangeListener<Number>() {
@@ -92,8 +116,6 @@ public class Shape extends AnchorPane{
 				getTransforms().setAll(translate, scale); //Adds the transformations to transformation queue
 			}
 		});
-
-
 	}
 	
 	/**

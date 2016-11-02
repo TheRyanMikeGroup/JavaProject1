@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 
 
 
-public class ShapeTester extends Application {
+public class ShapesDisplayTest extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -19,19 +19,22 @@ public class ShapeTester extends Application {
 			BorderPane root = new BorderPane();
 			Scene scene = new Scene(root,300,300);
 
-			Shape test = new ColoredShape(4, Color.PURPLE);
+			ShapesDisplay<Shape> display = new ShapesDisplay<Shape>(5);
 			
 			FlowPane controlPane = new FlowPane();
 			
 			
-			
+			for(int i = 3; i <= 20; i++)
+			{
+				display.add(new Shape(i));
+			}
 			
 			
 			
 			Button button = new Button("Test");
 			controlPane.getChildren().add(button);
 			
-			root.setCenter(test);
+			root.setCenter(display);
 			//root.setTop(controlPane);
 			
 			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
@@ -46,4 +49,3 @@ public class ShapeTester extends Application {
 		launch(args);
 	}
 }
-
