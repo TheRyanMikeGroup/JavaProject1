@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.transform.Scale;
+import javafx.scene.transform.Translate;
 
 /**
  * This object represents a shape with n-sides.
@@ -23,6 +25,10 @@ public class Shape extends AnchorPane{
 	 * The number of sides the shape has
 	 */
 	private final int num_sides;
+	private Scale scale;
+	private Translate translate;
+	
+	private static final double INITIAL_DIMENSION = 30.0;
 	
 	/**
 	 * Constructs a shape of n-sides
@@ -37,14 +43,42 @@ public class Shape extends AnchorPane{
 		//Sets the number of sides
 		this.num_sides = num_sides;
 		
+		//Initializes the scale and translate transformations for the recentering of the objects
+		scale = new Scale(1, 1);
+		translate = new Translate(0, 0);
+		
+		//Sets the center of scaling
+		scale.setPivotX(INITIAL_DIMENSION / 2);
+		scale.setPivotY(INITIAL_DIMENSION /2);
+		
+		//Sets the window size to the initial size
+		super.setHeight(INITIAL_DIMENSION);
+		super.setWidth(INITIAL_DIMENSION);
+
+		//Initializes the polygon
+		Polygon polygon = new Polygon();
+
+		//Generates the regular polygon
+		for(int i = 0; i < num_sides; i++)
+		{
+			polygon.getPoints().add((1 + Math.sin((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0);
+			polygon.getPoints().add((1 - Math.cos((i * 1.0) / num_sides * 2 * Math.PI)) * INITIAL_DIMENSION / 2.0);
+		}
+		
+		//Adds the Regular Polygon to the pane
+		super.getChildren().add(polygon);
+		
 		//Add a listener so that if the pane changes its height then the graphics will change 
 		super.heightProperty().addListener(new ChangeListener<Number>() {
 			public void changed( ObservableValue<? extends Number> observable,
 					Number oldValue, Number newValue)
 			{
-				for(Node current: getChildren())
-					if(oldValue.doubleValue() != 0)
-						current.setScaleY(current.getScaleY() * newValue.doubleValue() / oldValue.doubleValue());
+				scale.setY(newValue.doubleValue()/ INITIAL_DIMENSION); //Sets the amount the shape needs to be scaled on y-axis
+				translate.setY((newValue.doubleValue() - INITIAL_DIMENSION) / 2.0); //Sets the amount the shape needs to be translated to stay in the center
+				
+				getTransforms().setAll(translate, scale); //Adds the transformations to transformation queue
+				
+				
 			}
 		});
 		
@@ -52,19 +86,14 @@ public class Shape extends AnchorPane{
 		super.widthProperty().addListener(new ChangeListener<Number>() {
 			public void changed(ObservableValue<? extends Number> observable,
 					Number oldValue, Number newValue)
-			{
-				
-				for(Node current: getChildren())
-				{
-					if(oldValue.doubleValue() != 0)
-						current.setScaleX(current.getScaleX() * newValue.doubleValue() / (oldValue.doubleValue()));
-				}
+			{	
+				scale.setX(newValue.doubleValue()/ INITIAL_DIMENSION); //Sets the amount the shape needs to be scaled on x-axis
+				translate.setX((newValue.doubleValue() - INITIAL_DIMENSION) / 2.0); //Sets the amount the shape needs to be translated on x-axis
+				getTransforms().setAll(translate, scale); //Adds the transformations to transformation queue
 			}
 		});
-		
-		Rectangle rectangle = new Rectangle(0, 0 ,100, 100);
-		rectangle.setStrokeWidth(30);
-		super.getChildren().add(rectangle);
+
+
 	}
 	
 	/**
@@ -114,12 +143,10 @@ public class Shape extends AnchorPane{
 		{
 			double sinValue = Math.sin(i / num_sides * 2*Math.PI); //Calculates the sin of the point
 			polygon.getPoints().add((1 + sinValue)*width/2); //Adds the total width using the sin
-			polygon.getPoints().add((1 - sinValue - Math.PI / 2) * height /  2); //Adds the height by phase shifting the sin value and then scaling for the height.
+			polygon.getPoints().add((1 - sinValue + Math.PI / 2) * height /  2); //Adds the height by phase shifting the sin value and then scaling for the height.
 		}
 		
-		Line line = new Line(0, 0 , width, height);
-		//super.getChildren().clear();
-		//super.getChildren().add(polygon);
-		super.getChildren().add(line);
+		//Line line = new Line(0, 0 , width, height);
+		super.getChildren().add(polygon);
 	}
 }
