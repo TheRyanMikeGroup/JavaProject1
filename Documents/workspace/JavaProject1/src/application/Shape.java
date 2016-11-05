@@ -138,7 +138,7 @@ public class Shape extends AnchorPane{
 	 */
 	public String toString()
 	{
-		return "Shape with " + num_sides + " sides.";
+		return num_sides + "";
 	}
 	
 	/**
@@ -171,4 +171,6 @@ public class Shape extends AnchorPane{
 		//Line line = new Line(0, 0 , width, height);
 		super.getChildren().add(polygon);
 	}
+	
+
 }

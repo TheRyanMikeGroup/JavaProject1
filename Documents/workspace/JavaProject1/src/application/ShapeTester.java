@@ -19,7 +19,7 @@ public class ShapeTester extends Application {
 			BorderPane root = new BorderPane();
 			Scene scene = new Scene(root,300,300);
 
-			Shape test = new ColoredShape(4, Color.PURPLE);
+			Shape test = new ColoredShape(4, new NamedColor(Color.PURPLE, "Purple"));
 			
 			FlowPane controlPane = new FlowPane();
 			

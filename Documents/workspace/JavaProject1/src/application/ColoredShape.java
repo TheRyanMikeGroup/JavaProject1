@@ -1,6 +1,5 @@
 package application;
 
-import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 /**
@@ -13,7 +12,7 @@ public class ColoredShape extends Shape{
 	/**
 	 * The javafx color that the shape will be filled in with.
 	 */
-	private final Color color;
+	private final NamedColor color;
 
 	
 	/**
@@ -21,13 +20,15 @@ public class ColoredShape extends Shape{
 	 * @param num_sides The number of sides the shape has
 	 * @param color The color of the shape
 	 */
-	public ColoredShape(int num_sides, Color color) {
+	public ColoredShape(int num_sides, NamedColor color) {
 		super(num_sides);
 		this.color = color;
 		polygon.getStyleClass().setAll("coloredPolygon");
-		polygon.setFill(color);
+		polygon.setFill(color.getColor());
 		getChildren().clear();
 		getChildren().setAll(polygon, text);
+		
+		System.out.println("Generated " + num_sides + " " + color);
 	}
 	
 	/**
@@ -58,7 +59,7 @@ public class ColoredShape extends Shape{
 	 * 
 	 * @return The color of the shape.
 	 */
-	public Color getColor()
+	public NamedColor getColor()
 	{
 		return color;
 	}
